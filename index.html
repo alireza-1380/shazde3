@@ -10,9 +10,7 @@
       padding: 0;
       direction: rtl;
       font-family: 'Vazir', sans-serif;
-      background: url('https://s33.picofile.com/file/8485663492/InShot_20250708_205352707.jpg') no-repeat center center fixed;
-      background-size: cover;
-      height: 100vh;
+      background-color: #2e1a0d;
       color: white;
     }
     .quiz-area, .start-area {
@@ -32,7 +30,6 @@
       font-weight: bold;
       font-size: 22px;
       margin-bottom: 20px;
-      text-shadow: 1px 1px 3px black;
     }
     input[type="text"] {
       width: 100%;
@@ -43,7 +40,6 @@
       margin-bottom: 10px;
       background-color: #222;
       color: white;
-      box-shadow: inset 0 0 5px #000;
     }
     button {
       padding: 10px 20px;
@@ -53,8 +49,6 @@
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      box-shadow: 1px 1px 5px rgba(0,0,0,0.7);
-      transition: background-color 0.3s;
     }
     button:hover {
       background-color: #6a3f1a;
@@ -64,40 +58,18 @@
       font-weight: bold;
       font-size: 20px;
       min-height: 24px;
-      text-shadow: 1px 1px 3px black;
     }
     .footer-credit {
       position: absolute;
       bottom: 30px;
       right: 10px;
-      background: linear-gradient(135deg, #5c3a1a, #8b5e3c);
       padding: 5px 15px;
       font-size: 12px;
       color: #f0e4d7;
       border-radius: 12px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.5);
       font-weight: 600;
       font-family: 'Vazir', sans-serif;
       user-select: none;
-    }
-    #musicControl {
-      position: fixed;
-      bottom: 30px;
-      left: 10px;
-      background-color: rgba(76, 46, 21, 0.8);
-      border: none;
-      color: white;
-      padding: 8px 15px;
-      border-radius: 12px;
-      font-size: 14px;
-      cursor: pointer;
-      box-shadow: 0 0 8px rgba(0,0,0,0.5);
-      user-select: none;
-      transition: background-color 0.3s;
-      z-index: 1000;
-    }
-    #musicControl:hover {
-      background-color: rgba(107, 63, 26, 0.9);
     }
   </style>
 </head>
@@ -119,19 +91,7 @@
 
   <div class="footer-credit">برنامه نویس: علیرضا حمیدی</div>
 
-  <audio id="backgroundMusic" loop>
-    <source src="https://sv.musicc.ir/mp3s/2024-03-11/arsham_htn__D982D8B7D8B9D987_DA86DAA9D8A7D8AF__D8A7D8B3D8AAD8A7D8AF_D985D8B4DAA9D8A7D8AADB8CD8A7D986-920.mp3" type="audio/mpeg" />
-    مرورگر شما از پخش موسیقی پشتیبانی نمی‌کند.
-  </audio>
-
-  <audio id="cheerSound">
-    <source src="https://dlw.webahang.ir/music/Track/effects-and-cheering-sound1(128).mp3" type="audio/mpeg" />
-  </audio>
-
-  <button id="musicControl">🔊 قطع موسیقی</button>
-
   <script>
-    // سه آرایه سوالات: آسان، متوسط، سخت
     const easyQuestions = [
       { question: "چه چیزی همیشه جلوی شماست ولی نمی‌توانید آن را ببینید؟", answer: "آینده" },
       { question: "کدام رودخانه از همه بزرگ‌تر است ولی هیچ آبی ندارد؟", answer: "رودخانه روی نقشه" },
@@ -154,7 +114,6 @@
       { question: "چه چیزی شکم دارد ولی غذا نمی‌خورد؟", answer: "کشتی" }
     ];
 
-    // ترکیب مرحله‌ها به ترتیبی که اول آسان‌ها، بعد متوسط، بعد سخت
     const levels = [
       { name: "آسان", questions: easyQuestions },
       { name: "متوسط", questions: mediumQuestions },
@@ -171,9 +130,6 @@
     const startArea = document.getElementById('startArea');
     const quizArea = document.getElementById('quizArea');
     const startBtn = document.getElementById('startBtn');
-    const backgroundMusic = document.getElementById('backgroundMusic');
-    const cheerSound = document.getElementById('cheerSound');
-    const musicControl = document.getElementById('musicControl');
     const levelName = document.getElementById('levelName');
 
     function showQuestion() {
@@ -185,9 +141,9 @@
         levelName.textContent = "";
         return;
       }
+
       const currentQuestions = levels[currentLevel].questions;
       if (currentQuestionIndex >= currentQuestions.length) {
-        // رفتن به مرحله بعد
         currentLevel++;
         currentQuestionIndex = 0;
         showQuestion();
@@ -205,8 +161,6 @@
       startArea.style.display = "none";
       quizArea.style.display = "block";
       showQuestion();
-      backgroundMusic.currentTime = 0;
-      backgroundMusic.play();
     });
 
     submitBtn.addEventListener('click', () => {
@@ -223,13 +177,6 @@
       if (userAnswer === correctAnswer) {
         resultBox.style.color = "#0f0";
         resultBox.textContent = "✅ جواب درست است! 🎉";
-        cheerSound.play();
-        // قطع صدای تشویق بعد از 10 ثانیه
-        setTimeout(() => {
-          cheerSound.pause();
-          cheerSound.currentTime = 0;
-        }, 10000);
-
         currentQuestionIndex++;
         setTimeout(showQuestion, 1500);
       } else {
@@ -245,24 +192,7 @@
         submitBtn.click();
       }
     });
-
-    musicControl.addEventListener('click', () => {
-      if (backgroundMusic.paused) {
-        backgroundMusic.play();
-        musicControl.textContent = "🔊 قطع موسیقی";
-      } else {
-        backgroundMusic.pause();
-        musicControl.textContent = "🔈 پخش موسیقی";
-      }
-    });
-
-    // شروع موسیقی از بارگذاری صفحه
-    window.addEventListener('load', () => {
-      backgroundMusic.play().catch(() => {
-        // شاید مرورگر اجازه خودکار پخش ندهد، باید با تعامل کاربر پخش شود
-      });
-    });
   </script>
 
 </body>
-</html> 
+</html>
